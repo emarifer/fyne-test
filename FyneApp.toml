@@ -1,0 +1,10 @@
+[Details]
+  Icon = "logo.png"
+  Name = "Fyne Demo"
+  ID = "com.emarifer.app"
+  Version = "0.0.1"
+  Build = 6
+
+[LinuxAndBSD]
+  Categories = ["Development"]
+  Comment = "Test application made with Fyne.io"
