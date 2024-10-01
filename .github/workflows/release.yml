@@ -4,7 +4,7 @@ on:
   push:
     tags:
       - '*'
-      
+
 permissions:
   contents: write
 
@@ -14,16 +14,32 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v3
-    - name: Build
-      run: |
-          zip --junk-paths my-artifact logo.png
-    - name: Upload binaries to release
-      uses: svenstaro/upload-release-action@v2
-      with:
-        repo_token: ${{ secrets.GITHUB_TOKEN }}
-        file: ./my-artifact.zip
-        asset_name: mything
-        tag: ${{ github.ref }}
-        overwrite: true
-        body: "This is my release text"
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y gcc libgl1-mesa-dev xorg-dev
+      - name: Set up Go
+        uses: actions/setup-go@v2
+        with:
+          go-version: 1.23.1
+      - name: Install Fyne CLI
+        run: |
+          go install fyne.io/fyne/v2/cmd/fyne@latest
+      - name: Install project dependencies
+        run: |
+          go mod tidy
+      - name: Build package
+        run: |
+          GOFLAGS="-ldflags=-w -ldflags=-s" fyne package --exe demo
+          mv 'Fyne Demo.tar.xz' fyne_demo_Linux_x86_64.tar.xz
+      - name: Upload binaries to release
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: ./fyne_demo_Linux_x86_64.tar.xz
+          # asset_name: mything
+          tag: ${{ github.ref }}
+          overwrite: true
+          body: "Testing svenstaro/upload-release-action"
