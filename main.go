@@ -85,7 +85,7 @@ CC=x86_64-w64-mingw32-gcc \
   fyne package \
     --os windows \
     --release \
-    --executable dist/Example.exe
+    --executable dist/demo.exe
 
 FUNCIÓN "ELIMINAR" O "REMOVEITEM" EN LISTAS DE ENLACES #3100:
 https://github.com/fyne-io/fyne/issues/3100
