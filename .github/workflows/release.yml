@@ -96,7 +96,7 @@ jobs:
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           file_glob: true
-          file: ./${APP_NAME}*
+          file: ${{ APP_NAME }}*
           # asset_name: mything
           tag: ${{ github.ref }}
           overwrite: true
