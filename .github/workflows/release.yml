@@ -8,6 +8,9 @@ on:
 permissions:
   contents: write
 
+env:
+  APP_NAME: fyne_demo_
+
 jobs:
   build:
     name: Publish binaries
@@ -34,21 +37,41 @@ jobs:
       - name: Build packages
         run: |
           GOFLAGS="-ldflags=-w -ldflags=-s" fyne package --exe demo
-          mv 'Fyne Demo.tar.xz' fyne_demo_Linux_x86_64.tar.xz
+          tar -xvf 'Fyne Demo.tar.xz'
+          tar -czvf $APP_NAMELinux_x86_64.tar.xz usr/ Makefile LICENSE
+          rm -rf 'Fyne Demo.tar.xz' Makefile usr/
           CGO_ENABLED=1 \
           GOOS=windows \
           CC=x86_64-w64-mingw32-gcc \
             fyne package \
               --os windows \
               --release \
-              --executable dist/demo.exe
-          zip -r fyne_demo_Windows_x86_64.zip dist/
+              --executable bin/demo.exe
+          cat > README.txt << EOF
+INSTALLING THE FYNE DEMO APPLICATION:
+=====================================
+
+Since the supplied executable contains everything needed to run on Windows,
+it can be considered portable software.
+This means that you can run it from any location by simply double-clicking on it.
+
+However, if you want to use it as an "installed" application
+you can place the executable in the directory "C:\Program Files".
+You will then need to add it to the system PATH as explained here:
+https://www.eukhost.com/kb/how-to-add-to-the-path-on-windows-10-and-windows-11/
+
+================================================================================
+
+Enjoy it!!
+EOF
+          zip -r $APP_NAMEWindows_x86_64.zip bin/ README.txt
+          rm -rf README.txt bin/
       - name: Upload binaries to release
         uses: svenstaro/upload-release-action@v2
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           file_glob: true
-          file: ./fyne_demo_*
+          file: ./$APP_NAME*
           # asset_name: mything
           tag: ${{ github.ref }}
           overwrite: true

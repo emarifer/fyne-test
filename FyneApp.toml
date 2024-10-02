@@ -3,7 +3,7 @@
   Name = "Fyne Demo"
   ID = "com.emarifer.app"
   Version = "0.0.1"
-  Build = 7
+  Build = 9
 
 [LinuxAndBSD]
   Categories = ["Development"]

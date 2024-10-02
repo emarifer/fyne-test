@@ -73,7 +73,9 @@ func main() {
 	w.ShowAndRun()
 }
 
-/* COMPILATION COMMANDS:
+/* REFERENCES
+
+COMPILATION COMMANDS:
 GOFLAGS="-ldflags=-w -ldflags=-s" go build -o demo .
 
 GOFLAGS="-ldflags=-w -ldflags=-s" fyne package --exe demo
@@ -86,6 +88,26 @@ CC=x86_64-w64-mingw32-gcc \
     --os windows \
     --release \
     --executable dist/demo.exe
+
+PACKAGING FOR DESKTOP:
+https://docs.fyne.io/started/
+https://docs.fyne.io/started/packaging
+https://docs.fyne.io/started/cross-compiling
+
+BUNDLING RESOURCES:
+https://docs.fyne.io/extend/bundle.html
+
+GITHUB ACTIONS FOR SETUP GOLANG:
+https://github.com/actions/setup-go
+
+GITHUB ACTIONS TO UPLOAD BINARIES TO RELEASE:
+https://github.com/svenstaro/upload-release-action
+
+GITHUB ACTIONS: STORING INFORMATION IN VARIABLES:
+https://docs.github.com/en/actions/writing-workflows/choosing-what-your-workflow-does/store-information-in-variables
+
+RELEASE COMMAND:
+git tag v1.0.1 && git push origin v1.0.1
 
 FUNCIÓN "ELIMINAR" O "REMOVEITEM" EN LISTAS DE ENLACES #3100:
 https://github.com/fyne-io/fyne/issues/3100
@@ -102,4 +124,12 @@ https://hub.docker.com/r/scottyhardy/docker-wine/
 ADDITIONAL INFORMATION:
 https://leimao.github.io/blog/Docker-Wine/
 https://alesnosek.com/blog/2015/07/04/running-wine-within-docker/
+
+https://github.com/orgs/community/discussions/60820
+
+https://github.com/actions/upload-release-asset
+
+https://github.com/actions/checkout
+
+https://stackoverflow.com/questions/27301806/using-after-a-heredoc-in-bash
 */
