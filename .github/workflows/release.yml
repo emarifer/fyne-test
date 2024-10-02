@@ -80,7 +80,7 @@ jobs:
         run: |
           GOFLAGS="-ldflags=-w -ldflags=-s" fyne package --exe demo
           tar -xvf 'Fyne Demo.tar.xz'
-          tar -czvf $APP_NAMELinux_x86_64.tar.xz usr/ Makefile LICENSE.txt
+          tar -czvf ${APP_NAME}Linux_x86_64.tar.xz usr/ Makefile LICENSE.txt
           rm -rf 'Fyne Demo.tar.xz' Makefile usr/
           CGO_ENABLED=1 \
           GOOS=windows \
@@ -89,15 +89,15 @@ jobs:
               --os windows \
               --release \
               --executable bin/demo.exe
-          zip -r $APP_NAMEWindows_x86_64.zip bin/ LICENSE.txt README.txt
+          zip -r ${APP_NAME}Windows_x86_64.zip bin/ LICENSE.txt README.txt
           rm -rf LICENSE.txt README.txt bin/
       - name: Upload binaries to release
         uses: svenstaro/upload-release-action@v2
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           file_glob: true
-          file: ./$APP_NAME*
+          file: ./${APP_NAME}*
           # asset_name: mything
           tag: ${{ github.ref }}
           overwrite: true
-          body: "Testing svenstaro/upload-release-action-3"
+          body: "Testing svenstaro/upload-release-action-4"
