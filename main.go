@@ -105,6 +105,7 @@ https://github.com/svenstaro/upload-release-action
 
 GITHUB ACTIONS: STORING INFORMATION IN VARIABLES:
 https://docs.github.com/en/actions/writing-workflows/choosing-what-your-workflow-does/store-information-in-variables
+https://docs.github.com/en/actions/writing-workflows/choosing-what-your-workflow-does/store-information-in-variables#using-the-env-context-to-access-environment-variable-values
 
 RELEASE COMMAND:
 git tag v1.0.1 && git push origin v1.0.1
