@@ -48,22 +48,22 @@ jobs:
               --release \
               --executable bin/demo.exe
           cat > README.txt << EOF
-INSTALLING THE FYNE DEMO APPLICATION:
-=====================================
-
-Since the supplied executable contains everything needed to run on Windows,
-it can be considered portable software.
-This means that you can run it from any location by simply double-clicking on it.
-
-However, if you want to use it as an "installed" application
-you can place the executable in the directory "C:\Program Files".
-You will then need to add it to the system PATH as explained here:
-https://www.eukhost.com/kb/how-to-add-to-the-path-on-windows-10-and-windows-11/
-
-================================================================================
-
-Enjoy it!!
-EOF
+          INSTALLING THE FYNE DEMO APPLICATION:
+          =====================================
+          
+          Since the supplied executable contains everything needed to run on Windows,
+          it can be considered portable software.
+          This means that you can run it from any location by simply double-clicking on it.
+          
+          However, if you want to use it as an "installed" application
+          you can place the executable in the directory "C:\Program Files".
+          You will then need to add it to the system PATH as explained here:
+          https://www.eukhost.com/kb/how-to-add-to-the-path-on-windows-10-and-windows-11/
+          
+          ================================================================================
+          
+          Enjoy it!!
+          EOF
           zip -r $APP_NAMEWindows_x86_64.zip bin/ README.txt
           rm -rf README.txt bin/
       - name: Upload binaries to release
@@ -75,4 +75,4 @@ EOF
           # asset_name: mything
           tag: ${{ github.ref }}
           overwrite: true
-          body: "Testing svenstaro/upload-release-action-2"
+          body: "Testing svenstaro/upload-release-action-3"
