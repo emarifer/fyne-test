@@ -36,13 +36,17 @@ jobs:
           go mod tidy
       - name: Build packages
         run: |
-          fyne package --os windows --release --executable dist/demo.exe
-      # - name: Zip file
-      #   run: |
-      #     zip -r fyne_demo_Windows_x86_64.zip dist/
-      - name: Upload Artifact
-        uses: actions/upload-artifact@v4
+          fyne package --release --executable dist/demo.exe
+      - name: Zip file
+        run: |
+          zip -r ${APP_NAME}Windows_x86_64.zip dist/      
+      - name: Upload binaries to release
+        uses: svenstaro/upload-release-action@v2
         with:
-          name: fyne_demo_Windows_x86_64
-          path: ./dist/
-          compression-level: 9
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file_glob: true
+          file: ${{ env.APP_NAME }}*
+          # asset_name: mything
+          tag: ${{ github.ref }}
+          overwrite: true
+          body: "test fyne windows-3"
