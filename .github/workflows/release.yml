@@ -14,90 +14,36 @@ env:
 jobs:
   build:
     name: Publish binaries
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
 
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-      - name: Install dependencies
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y gcc libgl1-mesa-dev xorg-dev
-          sudo apt-get install -y gcc-mingw-w64
       - name: Set up Go
         uses: actions/setup-go@v2
         with:
           go-version: 1.23.1
+      - name: Setup MSYS2
+        uses: msys2/setup-msys2@v2
+        with:
+          msystem: mingw64
+          install: mingw-w64-x86_64-toolchain
       - name: Install Fyne CLI
         run: |
           go install fyne.io/fyne/v2/cmd/fyne@latest
       - name: Install project dependencies
         run: |
           go mod tidy
-      - name: Generate LICENSE & README files
-        run: |
-          cat > LICENSE.txt << EOF
-          The MIT License (MIT)
-
-          Copyright © 2024 Enrique Marín
-
-          Permission is hereby granted, free of charge, to any person obtaining a copy
-          of this software and associated documentation files (the "Software"), to deal
-          in the Software without restriction, including without limitation the rights
-          to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-          copies of the Software, and to permit persons to whom the Software is
-          furnished to do so, subject to the following conditions:
-
-          The above copyright notice and this permission notice shall be included in
-          all copies or substantial portions of the Software.
-
-          THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-          IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-          FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-          AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-          LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-          OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-          THE SOFTWARE.
-          EOF
-          cat > README.txt << EOF
-          INSTALLING THE FYNE DEMO APPLICATION:
-          =====================================
-          
-          Since the supplied executable contains everything needed to run on Windows,
-          it can be considered portable software.
-          This means that you can run it from any location by simply double-clicking on it.
-          
-          However, if you want to use it as an "installed" application
-          you can place the executable in the directory "C:\Program Files".
-          You will then need to add it to the system PATH as explained here:
-          https://www.eukhost.com/kb/how-to-add-to-the-path-on-windows-10-and-windows-11/
-          
-          ================================================================================
-          
-          Enjoy it!!
-          EOF
       - name: Build packages
         run: |
-          GOFLAGS="-ldflags=-w -ldflags=-s" fyne package --exe demo
-          tar -xvf 'Fyne Demo.tar.xz'
-          tar -czvf ${APP_NAME}Linux_x86_64.tar.xz usr/ Makefile LICENSE.txt
-          rm -rf 'Fyne Demo.tar.xz' Makefile usr/
-          CGO_ENABLED=1 \
-          GOOS=windows \
-          CC=x86_64-w64-mingw32-gcc \
-            fyne package \
-              --os windows \
-              --release \
-              --executable bin/demo.exe
-          zip -r ${APP_NAME}Windows_x86_64.zip bin/ LICENSE.txt README.txt
-          rm -rf LICENSE.txt README.txt bin/
+          fyne package --os windows  --release --executable demo.exe
       - name: Upload binaries to release
         uses: svenstaro/upload-release-action@v2
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file_glob: true
-          file: ${{ env.APP_NAME }}*
+          # file_glob: true
+          # file: ${{ env.APP_NAME }}*
           # asset_name: mything
           tag: ${{ github.ref }}
           overwrite: true
-          body: "Testing svenstaro/upload-release-action-4"
+          body: "Testing Fyne windows"
