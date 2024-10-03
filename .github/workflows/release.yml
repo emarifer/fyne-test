@@ -79,7 +79,7 @@ jobs:
       - name: Install project dependencies
         run: |
           go mod tidy
-      - name: Setup MSYS2 (Window only), Build .exe & Zip files
+      - name: Setup MSYS2 (Window only)
         if: ${{ matrix.os == 'windows-latest' }}
         uses: msys2/setup-msys2@v2
         with:
@@ -88,8 +88,12 @@ jobs:
           install: >-
             zip
             mingw-w64-x86_64-toolchain
+      - name: Build .exe file (Window only)
+        if: ${{ matrix.os == 'windows-latest' }}
         run: |
-          fyne package --release --executable bin/demo.exe
+          fyne package --release --executable dist/demo.exe
+      - name: Zip file (Window only)
+        if: ${{ matrix.os == 'windows-latest' }}
         shell: msys2 {0}
         run: |
           zip -r ${APP_NAME}Windows_x86_64.zip bin/ LICENSE.txt README.txt
