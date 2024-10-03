@@ -91,7 +91,7 @@ jobs:
       - name: Build .exe file (Window only)
         if: ${{ matrix.os == 'windows-latest' }}
         run: |
-          fyne package --release --executable dist/demo.exe
+          fyne package --release --executable bin/demo.exe
       - name: Zip file (Window only)
         if: ${{ matrix.os == 'windows-latest' }}
         shell: msys2 {0}
