@@ -107,6 +107,14 @@ GITHUB ACTIONS: STORING INFORMATION IN VARIABLES:
 https://docs.github.com/en/actions/writing-workflows/choosing-what-your-workflow-does/store-information-in-variables
 https://docs.github.com/en/actions/writing-workflows/choosing-what-your-workflow-does/store-information-in-variables#using-the-env-context-to-access-environment-variable-values
 
+GITHUB ACTIONS WITH 2 RUNNERS (WINDOWS/UBUNTU):
+[commit message: "test fyne linux & windows-6" (668224b)]
+https://github.com/emarifer/fyne-test/blob/668224baf0f71dcc98b03337a002650bfb48446c/.github/workflows/release.yml
+
+GITHUB ACTIONS WITH 1 RUNNERS (UBUNTU ONLY):
+[commit message: "fix bug in workflow file-5" (babe549)]
+https://github.com/emarifer/fyne-test/blob/babe54935295b203cbb7b491909424ca24361b9b/.github/workflows/release.yml
+
 RELEASE COMMAND:
 git tag v1.0.1 && git push origin v1.0.1
 
@@ -133,4 +141,13 @@ https://github.com/actions/upload-release-asset
 https://github.com/actions/checkout
 
 https://stackoverflow.com/questions/27301806/using-after-a-heredoc-in-bash
+
+
+MSYS2 SETUP & OTHERS:
+https://www.google.com/search?q=how+install+dependencies+in+windows+platform+github+actions&sca_esv=4997d9601951f80e&sxsrf=ADLYWIKV5m81XKskLNX1QP3AYNtmuixOVg%3A1727873188418&ei=pED9Zu2UGZ6txc8Pt5v9oAo&oq=how+install+dependencies+in+windows+platform+g&gs_lp=Egxnd3Mtd2l6LXNlcnAiLmhvdyBpbnN0YWxsIGRlcGVuZGVuY2llcyBpbiB3aW5kb3dzIHBsYXRmb3JtIGcqAggAMgUQIRigATIFECEYoAEyBRAhGKABMgUQIRigATIEECEYFUiUQVAAWKIwcAB4AZABAJgBlQGgAZcUqgEEMi4yMLgBAcgBAPgBAZgCCKACswjCAgcQIxiwAhgnwgIIEAAYgAQYogTCAgoQIRigARjDBBgKwgIIECEYoAEYwwSYAwCSBwMwLjigB5Vh&sclient=gws-wiz-serp
+
+https://github.com/actions/setup-haskell/issues/37
+https://github.com/msys2/setup-msys2
+https://github.com/svenstaro/upload-release-action
+https://github.com/emarifer/todo-gui-tauri-app/blob/main/.github/workflows/generate-builds.yaml
 */
