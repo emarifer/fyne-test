@@ -13,45 +13,102 @@ env:
 
 jobs:
   build:
-    name: Publish binaries
-    runs-on: windows-latest
+    name: name: Publish for ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        include:
+          - os: ubuntu-latest
+            artifact_name: ${{ env.APP_NAME }}Linux_x86_64.tar.xz
+            # asset_name: mything-linux-amd64
+          - os: windows-latest
+            artifact_name: ${{ env.APP_NAME }}Windows_x86_64.zip
+            # asset_name: mything-windows-amd64
 
     steps:
       - name: Checkout
         uses: actions/checkout@v3
+        
+      - name: Generate LICENSE & README files
+        run: |
+          echo 'The MIT License (MIT)' >> LICENSE.txt
+          echo '' >>  LICENSE.txt
+          echo 'Copyright © 2024 Enrique Marín' >>  LICENSE.txt
+          echo '' >>  LICENSE.txt
+          echo 'Permission is hereby granted, free of charge, to any person obtaining a copy' >>  LICENSE.txt
+          echo 'of this software and associated documentation files (the "Software"), to deal' >>  LICENSE.txt
+          echo 'in the Software without restriction, including without limitation the rights' >>  LICENSE.txt
+          echo 'to use, copy, modify, merge, publish, distribute, sublicense, and/or sell' >>  LICENSE.txt
+          echo 'copies of the Software, and to permit persons to whom the Software is' >>  LICENSE.txt
+          echo 'furnished to do so, subject to the following conditions:' >>  LICENSE.txt
+          echo '' >>  LICENSE.txt
+          echo 'The above copyright notice and this permission notice shall be included in' >>  LICENSE.txt
+          echo 'all copies or substantial portions of the Software.' >>  LICENSE.txt
+          echo '' >>  LICENSE.txt
+          echo 'THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR' >>  LICENSE.txt
+          echo 'IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,' >>  LICENSE.txt
+          echo 'FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE' >>  LICENSE.txt
+          echo 'AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER' >>  LICENSE.txt
+          echo 'LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,' >>  LICENSE.txt
+          echo 'OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN' >>  LICENSE.txt
+          echo 'THE SOFTWARE.' >>  LICENSE.txt
+          
+          echo 'INSTALLING THE FYNE DEMO APPLICATION:' >> README.txt
+          echo '=====================================' >> README.txt
+          echo '' >>  README.txt
+          echo 'Since the supplied executable contains everything needed to run on Windows,' >>  README.txt
+          echo 'it can be considered portable software.' >>  README.txt
+          echo 'This means that you can run it from any location by simply double-clicking on it.' >>  README.txt
+          echo '' >>  README.txt
+          echo 'However, if you want to use it as an "installed" application' >>  README.txt
+          echo 'you can place the executable in the directory "C:\Program Files".' >>  README.txt
+          echo 'You will then need to add it to the system PATH as explained here:' >>  README.txt
+          echo 'https://www.eukhost.com/kb/how-to-add-to-the-path-on-windows-10-and-windows-11/' >>  README.txt
+          echo '' >>  README.txt
+          echo '================================================================================' >>  README.txt
+          echo '' >>  README.txt
+          echo 'Enjoy it!!' >>  README.txt
+
       - name: Set up Go
         uses: actions/setup-go@v2
         with:
           go-version: 1.23.1
-      - name: Setup MSYS2
-        uses: msys2/setup-msys2@v2
-        with:
-          update: true
-          msystem: mingw64
-          # install: mingw-w64-x86_64-toolchain
-          install: >-
-            zip
-            mingw-w64-x86_64-toolchain
       - name: Install Fyne CLI
         run: |
           go install fyne.io/fyne/v2/cmd/fyne@latest
       - name: Install project dependencies
         run: |
           go mod tidy
-      - name: Build packages
+      - name: Setup MSYS2 (Window only), Build .exe & Zip files
+        if: ${{ matrix.os == 'windows-latest' }}
+        uses: msys2/setup-msys2@v2
+        with:
+          update: true
+          msystem: mingw64
+          install: >-
+            zip
+            mingw-w64-x86_64-toolchain
         run: |
-          fyne package --release --executable dist/demo.exe
-      - name: Zip file
+          fyne package --release --executable bin/demo.exe
         shell: msys2 {0}
         run: |
-          zip -r ${APP_NAME}Windows_x86_64.zip dist/      
+          zip -r ${APP_NAME}Windows_x86_64.zip bin/ LICENSE.txt README.txt
+
+      - name: Install dependencies & Build packages (Ubuntu only)
+        if: ${{ matrix.os == 'ubuntu-latest' }}
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y gcc libgl1-mesa-dev xorg-dev
+
+          GOFLAGS="-ldflags=-w -ldflags=-s" fyne package --exe demo
+          tar -xvf 'Fyne Demo.tar.xz'
+          tar -czvf ${APP_NAME}Linux_x86_64.tar.xz usr/ Makefile LICENSE.txt
+
       - name: Upload binaries to release
         uses: svenstaro/upload-release-action@v2
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file_glob: true
-          file: ${{ env.APP_NAME }}*
-          # asset_name: mything
+          file: ${{ matrix.artifact_name }}
           tag: ${{ github.ref }}
           overwrite: true
-          body: "test fyne windows-3"
+          body: "test fyne linux & windows"
