@@ -42,6 +42,7 @@ jobs:
         run: |
           fyne package --release --executable dist/demo.exe
       - name: Zip file
+        shell: msys2 {0}
         run: |
           zip -r ${APP_NAME}Windows_x86_64.zip dist/      
       - name: Upload binaries to release
